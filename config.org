@@ -49,14 +49,28 @@
    (setq use-package-always-ensure t)
  #+END_SRC
 
+*** Dimish
+
+Diminish is used to no clutter the bottom bar with all the, one cool thing is that while
+using use-package, you can add a :diminish to hide it directly
+
+https://github.com/myrjola/diminish.el
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package diminish)
+#+END_SRC
+
 *** Basic editing and UI
+
  Configure basic UI, remove menu, scrollbar etc...
 
  #+BEGIN_SRC emacs-lisp :tangle yes
-   (menu-bar-mode -1)
-   (toggle-scroll-bar -1)
-   (tool-bar-mode -1)
-   (defalias 'yes-or-no-p 'y-or-n-p)
+(if (display-graphic-p)
+    (progn
+      (menu-bar-mode -1)
+      (toggle-scroll-bar -1)
+      (tool-bar-mode -1)))
+(defalias 'yes-or-no-p 'y-or-n-p)
 
  #+END_SRC
 
@@ -68,6 +82,7 @@ More info: https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Emac
 (desktop-save-mode 1)
 
 #+END_SRC
+
 *** OSX
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -114,6 +129,7 @@ from: http://ergoemacs.org/emacs/emacs_x11_sync_clipboard.html
  #+BEGIN_SRC emacs-lisp :tangle yes
 
  (use-package which-key
+   :diminish
    :config
    (setq which-key-idle-delay 0.2)
    (which-key-mode))
@@ -128,6 +144,7 @@ Undo tree allow you yo see how to undo/redo
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 (use-package undo-tree
+  :diminish
   :bind (
     ("C-z" . undo)
     ("C-x _" . undo-tree-visualize)
@@ -143,6 +160,7 @@ Undo tree allow you yo see how to undo/redo
 (use-package magit
   :bind (("C-x g" . magit-status)))
 #+END_SRC
+
 *** Hydra menus
 #+BEGIN_SRC emacs-lisp :tangle yes
 
