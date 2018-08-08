@@ -1,0 +1,10 @@
+
+* Emacs configuration
+
+Again, trying to make my own configuration of emacs to work...
+
+Hope this time works better :P
+
+
+
+
