@@ -1,0 +1,163 @@
+#+STARTUP: content
+
+* emacs config
+
+** Learning
+*** Examples of emacs config
+
+ - https://github.com/rememberYou/.emacs.d/blob/master/config.org
+ - https://wolfecub.github.io/dotfiles/
+ - https://github.com/gilbertw1/emacs-literate-starter/blob/master/emacs.org
+ - https://github.com/emacs-tw/awesome-emacs
+
+*** Emacs editor movement to remember
+
+**** Movement
+     - C-a, C-e: Begining/end of the line
+     - M-a, M-e: Begining/end of a sentence
+
+**** Interesting Keybinding
+     - M-;: Comment
+     - F3 : Start Macro
+     - F4 : Stops Macro
+     - C-x z: Repeat last command (press z again without C-x to repeat)
+     - C-M-i: Auto complete
+****
+
+** config
+*** use-package
+ Configure use-package to install next package
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
+   (require 'package)
+
+   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+   (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+
+   (package-initialize)
+
+   ;; install use-package if not installed
+   (unless (require 'use-package nil t)
+     (package-refresh-contents)
+     (package-install 'use-package)
+     (require 'use-package))
+
+   ;; install package if not already in
+   (setq use-package-always-ensure t)
+ #+END_SRC
+*** Basic editing and UI
+ Configure basic UI, remove menu, scrollbar etc...
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
+   (menu-bar-mode -1)
+   (toggle-scroll-bar -1)
+   (tool-bar-mode -1)
+ #+END_SRC
+
+
+Desktop save mode saves the session of the emacs between executions
+More info: https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Emacs-Sessions.html#Saving-Emacs-Sessions
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(desktop-save-mode 1)
+
+#+END_SRC
+*** Load theme
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package leuven-theme
+  :init (load-theme 'leuven t))
+
+#+END_SRC
+
+*** Clipboard
+
+Make copy and paste from the clipboard work on emacs
+from: http://ergoemacs.org/emacs/emacs_x11_sync_clipboard.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+;; after copy Ctrl+c in Linux X11, you can paste by `yank' in emacs
+(setq x-select-enable-clipboard t)
+
+;; after mouse selection in X11, you can paste by `yank' in emacs
+(setq x-select-enable-primary t)
+
+#+END_SRC
+
+*** Which Key
+
+ Which key is a minor mode that allow you to see which keystrokes are available after a prefix
+
+ For example: when you press C-c, after a second it would show up what are the next keybinding you can use
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
+
+ (use-package which-key
+   :config
+   (setq which-key-idle-delay 0.2)
+   (which-key-mode)
+ )
+       
+
+ #+END_SRC
+
+*** GIT!
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package magit
+  :bind (("C-c g" . magit-status)))
+#+END_SRC
+*** Hydra menus
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package hydra
+    :defer 2
+    :bind (("C-c p" . hydra-windows/body)
+           ("C-c o" . hydra-org/body)
+    ))
+
+#+END_SRC
+
+**** Zoom  
+ #+BEGIN_SRC emacs-lisp :tangle yes
+
+ (defhydra hydra-help (:color pink)
+   "
+   ^
+   ^Windows^           ^Window^            ^Zoom^
+   ^───────^───────────^──────^────────────^────^──────
+   _q_ quit            _b_ balance         _-_ out
+   ^^                  _i_ heighten        _+_ in
+   ^^                  _j_ narrow          _=_ reset
+   ^^                  _k_ lower           ^^
+   ^^                  _l_ widen           ^^
+   ^^                  ^^                  ^^
+   "
+   ("q" nil)
+   ("b" balance-windows)
+   ("i" enlarge-window)
+   ("j" shrink-window-horizontally)
+   ("k" shrink-window)
+   ("l" enlarge-window-horizontally)
+   ("-" text-scale-decrease)
+   ("+" text-scale-increase)
+   ("=" (text-scale-increase 0)))
+
+
+ #+END_SRC
+
+**** Org
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(defhydra hydra-org (:color red :columns 3)
+  "Org Mode Movements"
+  ("n" outline-next-visible-heading "next heading")
+  ("p" outline-previous-visible-heading "prev heading")
+  ("N" org-forward-heading-same-level "next heading at same level")
+  ("P" org-backward-heading-same-level "prev heading at same level")
+  ("u" outline-up-heading "up heading")
+  ("g" org-goto "goto" :exit t))
+
+#+END_SRC
+
