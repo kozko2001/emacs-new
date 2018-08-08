@@ -22,6 +22,9 @@
      - F4 : Stops Macro
      - C-x z: Repeat last command (press z again without C-x to repeat)
      - C-M-i: Auto complete
+     - C-SPC: Starts a region and adds a mark
+     - C-x C-x: swaps cursor and mark
+
 ****
 
 ** config
@@ -45,6 +48,7 @@
    ;; install package if not already in
    (setq use-package-always-ensure t)
  #+END_SRC
+
 *** Basic editing and UI
  Configure basic UI, remove menu, scrollbar etc...
 
@@ -52,6 +56,8 @@
    (menu-bar-mode -1)
    (toggle-scroll-bar -1)
    (tool-bar-mode -1)
+   (defalias 'yes-or-no-p 'y-or-n-p)
+
  #+END_SRC
 
 
@@ -62,6 +68,19 @@ More info: https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Emac
 (desktop-save-mode 1)
 
 #+END_SRC
+*** OSX
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; key bindings
+(when (eq system-type 'darwin) ;; mac specific settings
+  (setq mac-option-modifier 'alt)
+  (setq mac-command-modifier 'meta)
+  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+  (setq mac-right-option-modifier 'none))
+
+
+#+END_SRC
+
 *** Load theme
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -97,16 +116,32 @@ from: http://ergoemacs.org/emacs/emacs_x11_sync_clipboard.html
  (use-package which-key
    :config
    (setq which-key-idle-delay 0.2)
-   (which-key-mode)
- )
+   (which-key-mode))
        
 
  #+END_SRC
 
+*** Undo tree
+
+Undo tree allow you yo see how to undo/redo
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package undo-tree
+  :bind (
+    ("C-z" . undo)
+    ("C-x _" . undo-tree-visualize)
+    ("C-S-z" . undo-tree-redo))
+  :config
+  (global-undo-tree-mode 1))
+
+#+END_SRC
+
+
 *** GIT!
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package magit
-  :bind (("C-c g" . magit-status)))
+  :bind (("C-x g" . magit-status)))
 #+END_SRC
 *** Hydra menus
 #+BEGIN_SRC emacs-lisp :tangle yes
