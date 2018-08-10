@@ -25,9 +25,16 @@
      - C-SPC: Starts a region and adds a mark
      - C-x C-x: swaps cursor and mark
 
-****
 
 ** config
+*** Set GC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(setq gc-cons-threshold 20000000)
+
+#+END_SRC!
+
 *** use-package
  Configure use-package to install next package
 
@@ -61,7 +68,6 @@ https://github.com/myrjola/diminish.el
 #+END_SRC
 
 *** Basic editing and UI
-
  Configure basic UI, remove menu, scrollbar etc...
 
  #+BEGIN_SRC emacs-lisp :tangle yes
@@ -82,6 +88,34 @@ More info: https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Emac
 (desktop-save-mode 1)
 
 #+END_SRC
+*** IDO 
+
+IDO (Interactive DO) https://www.gnu.org/software/emacs/manual/html_mono/ido.html) 
+
+is already built in into the Emacs system... it helps you when there are multiple options 
+on the mini-buffer of emacs such as find-file or switch-buffer
+
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; Since is already in we don't need to use-package it
+
+  (ido-mode 1)
+  (ido-everywhere 1)
+#+END_SRC
+
+*** Projectile
+
+Projectile (https://github.com/bbatsov/projectile) 
+
+Allow you to do find-file and search inside your project only
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package projectile
+  :bind-keymap
+  ("C-c p" . projectile-command-map))
+
+#+END_SRC
 
 *** OSX
 
@@ -95,7 +129,7 @@ More info: https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Emac
 
 
 #+END_SRC
-
+    
 *** Load theme
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -147,18 +181,17 @@ Undo tree allow you yo see how to undo/redo
   :diminish
   :bind (
     ("C-z" . undo)
-    ("C-x _" . undo-tree-visualize)
+    ("C-c _" . undo-tree-visualize)
     ("C-S-z" . undo-tree-redo))
   :config
   (global-undo-tree-mode 1))
 
 #+END_SRC
 
-
 *** GIT!
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package magit
-  :bind (("C-x g" . magit-status)))
+  :bind (("C-c g" . magit-status)))
 #+END_SRC
 
 *** Hydra menus
@@ -166,16 +199,15 @@ Undo tree allow you yo see how to undo/redo
 
   (use-package hydra
     :defer 2
-    :bind (("C-c p" . hydra-windows/body)
-           ("C-c o" . hydra-org/body)
-    ))
+    :bind (("C-c m p" . hydra-windows/body)
+           ("C-c m o" . hydra-org/body)))
 
 #+END_SRC
 
 **** Zoom  
  #+BEGIN_SRC emacs-lisp :tangle yes
 
- (defhydra hydra-help (:color pink)
+ (defhydra hydra-windows (:color pink)
    "
    ^
    ^Windows^           ^Window^            ^Zoom^
