@@ -15,6 +15,9 @@
 **** Movement
      - C-a, C-e: Begining/end of the line
      - M-a, M-e: Begining/end of a sentence
+     - M-d     : Kill word (forward until next change of word
+     - M-- M-d : Kill word (but backwards because the M-- means modifier -1)
+     - 
 
 **** Interesting Keybinding
      - M-;: Comment
@@ -24,6 +27,33 @@
      - C-M-i: Auto complete
      - C-SPC: Starts a region and adds a mark
      - C-x C-x: swaps cursor and mark
+     - C-x C-e: Execute sexp after the cursor
+     - . on dired mode: Shows dired hydra help menu
+
+**** Help - Describe 
+     - C-h f: Describe function
+     - C-h m: Describe mode
+     - C-h k: Describe key
+     - C-h v: Describe variablle
+
+**** Concepts
+
+***** DWIM (Do What I Mean)
+
+https://www.emacswiki.org/emacs/DoWhatIMean#DWIM
+
+For example when setted the `dired-dwim-target` variable, if you have two windows with dired
+and copy/move a file, will do directly with the other window. Because assumes that's what you want
+
+#+BEGIN_SRC emacs-lisp
+
+(setq dired-dwim-target t)
+
+
+#+END_SRC
+
+*** Links
+    - 
 
 
 ** config
@@ -65,6 +95,7 @@ https://github.com/myrjola/diminish.el
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 (use-package diminish)
+
 #+END_SRC
 
 *** Basic editing and UI
@@ -83,11 +114,13 @@ https://github.com/myrjola/diminish.el
 
 Desktop save mode saves the session of the emacs between executions
 More info: https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Emacs-Sessions.html#Saving-Emacs-Sessions
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 (desktop-save-mode 1)
 
 #+END_SRC
+
 *** IDO 
 
 IDO (Interactive DO) https://www.gnu.org/software/emacs/manual/html_mono/ido.html) 
@@ -172,7 +205,7 @@ from: http://ergoemacs.org/emacs/emacs_x11_sync_clipboard.html
  #+END_SRC
 
 *** Undo tree
-
+    
 Undo tree allow you yo see how to undo/redo
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -194,43 +227,93 @@ Undo tree allow you yo see how to undo/redo
   :bind (("C-c g" . magit-status)))
 #+END_SRC
 
+*** Expand Region
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package expand-region
+  :ensure
+  :bind
+  (("C-+" . er/expand-region)
+   ("C-M-+" . er/contract-region)))
+
+
+#+END_SRC
+
+*** Multiple cursors
+https://github.com/magnars/multiple-cursors.el
+
+Multiple cursors allow you to change multiple parts of the file that share some text
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package multiple-cursors
+  :bind (("<f2>" . mc/mark-previous-like-this)
+         ("<f3>" . mc/mark-next-like-this)
+         ("C-c <f2>" . mc/mark-all-like-this)
+         ("<ESC> <ESC>" . mc/keyboard-quit))
+  :ensure t)
+
+(use-package multiple-cursors
+  :bind
+  (("<C-S-down>" . mc/mark-next-like-this)
+   ("<C-S-up>" . mc/mark-previous-like-this)
+   ("C->" . mc/mark-next-like-this)
+   ("C-<" . mc/mark-previous-like-this)
+   ("C-S-c C-S-c" . mc/edit-lines)))
+
+#+END_SRC
+
+Since yet not fluent.... I have a hydra menu
+
+C-c m c (Menu for cursors) allow you to open this menu
+
+- n/p: to add a new cursor on next line
+- N/P: skip next line to add a cursor
+- a: (mark-all) will use the region as a search and add a cursor for each match
+- r: does the same but with an regex on the current region
+- C-Shift-c C-Shift-c: Add a cursor at the beginning of each line in the
+
+
+
 *** Hydra menus
 #+BEGIN_SRC emacs-lisp :tangle yes
 
   (use-package hydra
     :defer 2
     :bind (("C-c m p" . hydra-windows/body)
+           ("C-c m c" . multiple-cursors-hydra/body)
            ("C-c m o" . hydra-org/body)))
 
 #+END_SRC
 
 **** Zoom  
- #+BEGIN_SRC emacs-lisp :tangle yes
+  #+BEGIN_SRC emacs-lisp :tangle yes
 
- (defhydra hydra-windows (:color pink)
-   "
-   ^
-   ^Windows^           ^Window^            ^Zoom^
-   ^───────^───────────^──────^────────────^────^──────
-   _q_ quit            _b_ balance         _-_ out
-   ^^                  _i_ heighten        _+_ in
-   ^^                  _j_ narrow          _=_ reset
-   ^^                  _k_ lower           ^^
-   ^^                  _l_ widen           ^^
-   ^^                  ^^                  ^^
-   "
-   ("q" nil)
-   ("b" balance-windows)
-   ("i" enlarge-window)
-   ("j" shrink-window-horizontally)
-   ("k" shrink-window)
-   ("l" enlarge-window-horizontally)
-   ("-" text-scale-decrease)
-   ("+" text-scale-increase)
-   ("=" (text-scale-increase 0)))
+  (defhydra hydra-windows (:color pink)
+    "
+    ^
+    ^Windows^           ^Window^            ^Zoom^
+    ^───────^───────────^──────^────────────^────^──────
+    _q_ quit            _b_ balance         _-_ out
+    ^^                  _i_ heighten        _+_ in
+    ^^                  _j_ narrow          _=_ reset
+    ^^                  _k_ lower           ^^
+    ^^                  _l_ widen           ^^
+    ^^                  ^^                  ^^
+    "
+    ("q" nil)
+    ("B" balance-windows)
+    ("i" enlarge-window)
+    ("j" shrink-window-horizontally)
+    ("k" shrink-window)
+    ("l" enlarge-window-horizontally)
+    ("-" text-scale-decrease)
+    ("+" text-scale-increase)
+    ("=" (text-scale-increase 0)))
 
 
- #+END_SRC
+  #+END_SRC
 
 **** Org
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -243,6 +326,91 @@ Undo tree allow you yo see how to undo/redo
   ("P" org-backward-heading-same-level "prev heading at same level")
   ("u" outline-up-heading "up heading")
   ("g" org-goto "goto" :exit t))
+
+#+END_SRC
+
+**** Dired
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(defhydra hydra-dired (:hint nil :color pink)
+  "
+_+_ mkdir          _v_iew           _m_ark             _(_ details        _i_nsert-subdir    wdired
+_C_opy             _O_ view other   _U_nmark all       _)_ omit-mode      _$_ hide-subdir    C-x C-q : edit
+_D_elete           _o_pen other     _u_nmark           _l_ redisplay      _w_ kill-subdir    C-c C-c : commit
+_R_ename           _M_ chmod        _t_oggle           _g_ revert buf     _e_ ediff          C-c ESC : abort
+_Y_ rel symlink    _G_ chgrp        _E_xtension mark   _s_ort             _=_ pdiff
+_S_ymlink          ^ ^              _F_ind marked      _._ toggle hydra   \\ flyspell
+_r_sync            ^ ^              ^ ^                ^ ^                _?_ summary
+_z_ compress-file  _A_ find regexp
+_Z_ compress       _Q_ repl regexp
+
+T - tag prefix
+"
+  ("\\" dired-do-ispell)
+  ("(" dired-hide-details-mode)
+  (")" dired-omit-mode)
+  ("+" dired-create-directory)
+  ("=" diredp-ediff)         ;; smart diff
+  ("?" dired-summary)
+  ("$" diredp-hide-subdir-nomove)
+  ("A" dired-do-find-regexp)
+  ("C" dired-do-copy)        ;; Copy all marked files
+  ("D" dired-do-delete)
+  ("E" dired-mark-extension)
+  ("e" dired-ediff-files)
+  ("F" dired-do-find-marked-files)
+  ("G" dired-do-chgrp)
+  ("g" revert-buffer)        ;; read all directories again (refresh)
+  ("i" dired-maybe-insert-subdir)
+  ("l" dired-do-redisplay)   ;; relist the marked or singel directory
+  ("M" dired-do-chmod)
+  ("m" dired-mark)
+  ("O" dired-display-file)
+  ("o" dired-find-file-other-window)
+  ("Q" dired-do-find-regexp-and-replace)
+  ("R" dired-do-rename)
+  ("r" dired-do-rsynch)
+  ("S" dired-do-symlink)
+  ("s" dired-sort-toggle-or-edit)
+  ("t" dired-toggle-marks)
+  ("U" dired-unmark-all-marks)
+  ("u" dired-unmark)
+  ("v" dired-view-file)      ;; q to exit, s to search, = gets line #
+  ("w" dired-kill-subdir)
+  ("Y" dired-do-relsymlink)
+  ("z" diredp-compress-this-file)
+  ("Z" dired-do-compress)
+  ("q" nil)
+  ("." nil :color blue))
+
+(define-key dired-mode-map "." 'hydra-dired/body)
+
+#+END_SRC
+
+**** Multiple Cursor
+
+#+BEGIN_SRC emacs-lisp
+
+(defhydra multiple-cursors-hydra (:hint nil)
+  "
+     ^Up^            ^Down^        ^Other^
+----------------------------------------------
+[_p_]   Next    [_n_]   Next    [_l_] Edit lines
+[_P_]   Skip    [_N_]   Skip    [_a_] Mark all
+[_M-p_] Unmark  [_M-n_] Unmark  [_r_] Mark by regexp
+^ ^             ^ ^             [_q_] Quit
+"
+  ("l" mc/edit-lines :exit t)
+  ("a" mc/mark-all-like-this :exit t)
+  ("n" mc/mark-next-like-this)
+  ("N" mc/skip-to-next-like-this)
+  ("M-n" mc/unmark-next-like-this)
+  ("p" mc/mark-previous-like-this)
+  ("P" mc/skip-to-previous-like-this)
+  ("M-p" mc/unmark-previous-like-this)
+  ("r" mc/mark-all-in-region-regexp :exit t)
+  ("q" nil))
 
 #+END_SRC
 
