@@ -9,32 +9,33 @@
  - https://wolfecub.github.io/dotfiles/
  - https://github.com/gilbertw1/emacs-literate-starter/blob/master/emacs.org
  - https://github.com/emacs-tw/awesome-emacs
+ - https://matthewbauer.us/bauer/
 
 *** Emacs editor movement to remember
 
 **** Movement
-     - C-a, C-e: Begining/end of the line
-     - M-a, M-e: Begining/end of a sentence
-     - M-d     : Kill word (forward until next change of word
-     - M-- M-d : Kill word (but backwards because the M-- means modifier -1)
-     - 
+    - C-a, C-e: Begining/end of the line
+    - M-a, M-e: Begining/end of a sentence
+    - M-d     : Kill word (forward until next change of word
+    - M-- M-d : Kill word (but backwards because the M-- means modifier -1)
+    - 
 
 **** Interesting Keybinding
-     - M-;: Comment
-     - F3 : Start Macro
-     - F4 : Stops Macro
-     - C-x z: Repeat last command (press z again without C-x to repeat)
-     - C-M-i: Auto complete
-     - C-SPC: Starts a region and adds a mark
-     - C-x C-x: swaps cursor and mark
-     - C-x C-e: Execute sexp after the cursor
-     - . on dired mode: Shows dired hydra help menu
+    - M-;: Comment
+    - F3 : Start Macro
+    - F4 : Stops Macro
+    - C-x z: Repeat last command (press z again without C-x to repeat)
+    - C-M-i: Auto complete
+    - C-SPC: Starts a region and adds a mark
+    - C-x C-x: swaps cursor and mark
+    - C-x C-e: Execute sexp after the cursor
+    - . on dired mode: Shows dired hydra help menu
 
 **** Help - Describe 
-     - C-h f: Describe function
-     - C-h m: Describe mode
-     - C-h k: Describe key
-     - C-h v: Describe variablle
+    - C-h f: Describe function
+    - C-h m: Describe mode
+    - C-h k: Describe key
+    - C-h v: Describe variablle
 
 **** Concepts
 
@@ -52,8 +53,6 @@ and copy/move a file, will do directly with the other window. Because assumes th
 
 #+END_SRC
 
-*** Links
-    - 
 
 
 ** config
@@ -66,25 +65,25 @@ and copy/move a file, will do directly with the other window. Because assumes th
 #+END_SRC!
 
 *** use-package
- Configure use-package to install next package
+Configure use-package to install next package
 
- #+BEGIN_SRC emacs-lisp :tangle yes
-   (require 'package)
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'package)
 
-   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-   (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
-   (package-initialize)
+(package-initialize)
 
-   ;; install use-package if not installed
-   (unless (require 'use-package nil t)
-     (package-refresh-contents)
-     (package-install 'use-package)
-     (require 'use-package))
+;; install use-package if not installed
+(unless (require 'use-package nil t)
+    (package-refresh-contents)
+    (package-install 'use-package)
+    (require 'use-package))
 
-   ;; install package if not already in
-   (setq use-package-always-ensure t)
- #+END_SRC
+;; install package if not already in
+(setq use-package-always-ensure t)
+#+END_SRC
 
 *** Dimish
 
@@ -99,17 +98,17 @@ https://github.com/myrjola/diminish.el
 #+END_SRC
 
 *** Basic editing and UI
- Configure basic UI, remove menu, scrollbar etc...
+Configure basic UI, remove menu, scrollbar etc...
 
- #+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (if (display-graphic-p)
-    (progn
-      (menu-bar-mode -1)
-      (toggle-scroll-bar -1)
-      (tool-bar-mode -1)))
+(progn
+    (menu-bar-mode -1)
+    (toggle-scroll-bar -1)
+    (tool-bar-mode -1)))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
- #+END_SRC
+#+END_SRC
 
 
 Desktop save mode saves the session of the emacs between executions
@@ -121,10 +120,10 @@ More info: https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Emac
 
 
 (setq desktop-buffers-not-to-save
-     (concat "\\("
-             "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
-             "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
-      "\\)$"))
+    (concat "\\("
+	    "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
+	    "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
+    "\\)$"))
 (add-to-list 'desktop-modes-not-to-save 'dired-mode)
 (add-to-list 'desktop-modes-not-to-save 'Info-mode)
 (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
@@ -141,10 +140,10 @@ on the mini-buffer of emacs such as find-file or switch-buffer
 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; Since is already in we don't need to use-package it
+;; Since is already in we don't need to use-package it
 
-  (ido-mode 1)
-  (ido-everywhere 1)
+(ido-mode 1)
+(ido-everywhere 1)
 #+END_SRC
 
 *** Projectile
@@ -156,8 +155,8 @@ Allow you to do find-file and search inside your project only
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 (use-package projectile
-  :bind-keymap
-  ("C-c p" . projectile-command-map))
+:bind-keymap
+("C-c p" . projectile-command-map))
 
 #+END_SRC
 
@@ -166,20 +165,20 @@ Allow you to do find-file and search inside your project only
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; key bindings
 (when (eq system-type 'darwin) ;; mac specific settings
-  (setq mac-option-modifier 'alt)
-  (setq mac-command-modifier 'meta)
-  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
-  (setq mac-right-option-modifier 'none))
+(setq mac-option-modifier 'alt)
+(setq mac-command-modifier 'meta)
+(global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+(setq mac-right-option-modifier 'none))
 
 
 #+END_SRC
-    
+
 *** Load theme
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 (use-package leuven-theme
-  :init (load-theme 'leuven t))
+:init (load-theme 'leuven t))
 
 #+END_SRC
 
@@ -200,42 +199,42 @@ from: http://ergoemacs.org/emacs/emacs_x11_sync_clipboard.html
 
 *** Which Key
 
- Which key is a minor mode that allow you to see which keystrokes are available after a prefix
+Which key is a minor mode that allow you to see which keystrokes are available after a prefix
 
- For example: when you press C-c, after a second it would show up what are the next keybinding you can use
+For example: when you press C-c, after a second it would show up what are the next keybinding you can use
 
- #+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 
- (use-package which-key
-   :diminish
-   :config
-   (setq which-key-idle-delay 0.2)
-   (which-key-mode))
-       
+(use-package which-key
+:diminish
+:config
+(setq which-key-idle-delay 0.2)
+(which-key-mode))
 
- #+END_SRC
+
+#+END_SRC
 
 *** Undo tree
-    
+
 Undo tree allow you yo see how to undo/redo
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 (use-package undo-tree
-  :diminish
-  :bind (
-    ("C-z" . undo)
-    ("C-c _" . undo-tree-visualize)
-    ("C-S-z" . undo-tree-redo))
-  :config
-  (global-undo-tree-mode 1))
+:diminish
+:bind (
+("C-z" . undo)
+("C-c _" . undo-tree-visualize)
+("C-S-z" . undo-tree-redo))
+:config
+(global-undo-tree-mode 1))
 
 #+END_SRC
 
 *** GIT!
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package magit
-  :bind (("C-c g" . magit-status)))
+:bind (("C-c g" . magit-status)))
 #+END_SRC
 
 *** Expand Region
@@ -243,10 +242,10 @@ Undo tree allow you yo see how to undo/redo
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 (use-package expand-region
-  :ensure
-  :bind
-  (("C-+" . er/expand-region)
-   ("C-M-+" . er/contract-region)))
+:ensure
+:bind
+(("C-+" . er/expand-region)
+("C-M-+" . er/contract-region)))
 
 
 #+END_SRC
@@ -259,19 +258,19 @@ Multiple cursors allow you to change multiple parts of the file that share some 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 (use-package multiple-cursors
-  :bind (("<f2>" . mc/mark-previous-like-this)
-         ("<f3>" . mc/mark-next-like-this)
-         ("C-c <f2>" . mc/mark-all-like-this)
-         ("<ESC> <ESC>" . mc/keyboard-quit))
-  :ensure t)
+:bind (("<f2>" . mc/mark-previous-like-this)
+	("<f3>" . mc/mark-next-like-this)
+	("C-c <f2>" . mc/mark-all-like-this)
+	("<ESC> <ESC>" . mc/keyboard-quit))
+:ensure t)
 
 (use-package multiple-cursors
-  :bind
-  (("<C-S-down>" . mc/mark-next-like-this)
-   ("<C-S-up>" . mc/mark-previous-like-this)
-   ("C->" . mc/mark-next-like-this)
-   ("C-<" . mc/mark-previous-like-this)
-   ("C-S-c C-S-c" . mc/edit-lines)))
+:bind
+(("<C-S-down>" . mc/mark-next-like-this)
+("<C-S-up>" . mc/mark-previous-like-this)
+("C->" . mc/mark-next-like-this)
+("C-<" . mc/mark-previous-like-this)
+("C-S-c C-S-c" . mc/edit-lines)))
 
 #+END_SRC
 
@@ -294,7 +293,7 @@ C-c m c (Menu for cursors) allow you to open this menu
     :defer 2
     :bind (("C-c m w" . hydra-windows/body)
            ("C-c m c" . multiple-cursors-hydra/body)
-           ("C-c m o" . hydra-org/body)))
+           ("C-c m o" . hydra-org
 
 #+END_SRC
 
@@ -431,6 +430,16 @@ T - tag prefix
 *** Evil ????? 
 
 I want evil just for movement but not for anything else...
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package evil)
+
+#+END_SRC
+
+For the moment I install the package but not used by default but
+you need to start it by M-x evil-mode
+
 
 *** Eyebrowser / perspective
 
