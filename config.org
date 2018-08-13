@@ -119,6 +119,17 @@ More info: https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Emac
 
 (desktop-save-mode 1)
 
+
+(setq desktop-buffers-not-to-save
+     (concat "\\("
+             "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
+             "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
+      "\\)$"))
+(add-to-list 'desktop-modes-not-to-save 'dired-mode)
+(add-to-list 'desktop-modes-not-to-save 'Info-mode)
+(add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
+(add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
+
 #+END_SRC
 
 *** IDO 
@@ -274,14 +285,14 @@ C-c m c (Menu for cursors) allow you to open this menu
 - r: does the same but with an regex on the current region
 - C-Shift-c C-Shift-c: Add a cursor at the beginning of each line in the
 
-
-
 *** Hydra menus
+
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 
   (use-package hydra
     :defer 2
-    :bind (("C-c m p" . hydra-windows/body)
+    :bind (("C-c m w" . hydra-windows/body)
            ("C-c m c" . multiple-cursors-hydra/body)
            ("C-c m o" . hydra-org/body)))
 
@@ -414,3 +425,19 @@ T - tag prefix
 
 #+END_SRC
 
+
+** TODO
+
+*** Evil ????? 
+
+I want evil just for movement but not for anything else...
+
+*** Eyebrowser / perspective
+
+I would love yo have a way to organize my code programming like a shell at the bottom and a 
+tree (dired) and a couple of buffers and be able to switch between them fast and easy just 
+like in sublime or something :)
+
+*** Ivy / Swipper / Counsel
+
+Add some magic but not helm so everything still works fast :)
