@@ -9,6 +9,8 @@
  - https://wolfecub.github.io/dotfiles/
  - https://github.com/gilbertw1/emacs-literate-starter/blob/master/emacs.org
  - https://github.com/emacs-tw/awesome-emacs
+ - https://github.com/munen/emacs.d/ (from presentation https://www.youtube.com/watch?v=gfZDwYeBlO4)
+
 
 *** Emacs editor movement to remember
 
@@ -52,9 +54,13 @@ and copy/move a file, will do directly with the other window. Because assumes th
 
 #+END_SRC
 
-*** Links
-    - 
+***** Narrow 
 
+C-x n n: Narrow to region, means that temporary you only see the region on the current buffer
+C-x n w: Widen the region
+
+
+      
 
 ** config
 *** Set GC
@@ -86,6 +92,19 @@ and copy/move a file, will do directly with the other window. Because assumes th
    (setq use-package-always-ensure t)
  #+END_SRC
 
+*** Not Temp files plz!
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(setq make-backup-files nil)
+
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
+#+END_SRC
 *** Dimish
 
 Diminish is used to no clutter the bottom bar with all the, one cool thing is that while
