@@ -303,9 +303,11 @@ C-c m c (Menu for cursors) allow you to open this menu
 
   (use-package hydra
     :defer 2
+    :config
+    (define-key dired-mode-map "." 'hydra-dired/body)
     :bind (("C-c m w" . hydra-windows/body)
            ("C-c m c" . multiple-cursors-hydra/body)
-           ("C-c m o" . hydra-org
+           ("C-c m o" . hydra-org)))
 
 #+END_SRC
 
@@ -325,7 +327,7 @@ C-c m c (Menu for cursors) allow you to open this menu
     ^^                  ^^                  ^^
     "
     ("q" nil)
-    ("B" balance-windows)
+    ("b" balance-windows)
     ("i" enlarge-window)
     ("j" shrink-window-horizontally)
     ("k" shrink-window)
@@ -406,7 +408,6 @@ T - tag prefix
   ("q" nil)
   ("." nil :color blue))
 
-(define-key dired-mode-map "." 'hydra-dired/body)
 
 #+END_SRC
 
@@ -451,7 +452,6 @@ I want evil just for movement but not for anything else...
 
 For the moment I install the package but not used by default but
 you need to start it by M-x evil-mode
-
 
 *** Eyebrowser / perspective
 
