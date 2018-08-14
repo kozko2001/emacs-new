@@ -316,8 +316,8 @@ Winner mode allow you to undo window open/close configuration etc...
 
 (use-package winner
   :diminish
-  :config
-  (winner-mode)
+  :init
+  (winner-mode 1)
   :bind
   (("C-c w _" . winner-undo)
    ("C-c w -" . winner-redo)))
@@ -348,8 +348,8 @@ Winner mode allow you to undo window open/close configuration etc...
     ^Windows^           ^Window^            ^Zoom^
     ^───────^───────────^──────^────────────^────^──────
     _q_ quit            _b_ balance         _-_ out
-    ^^                  _i_ heighten        _+_ in
-    ^^                  _j_ narrow          _=_ reset
+    _u_ undo            _i_ heighten        _+_ in
+    _r_ redo            _j_ narrow          _=_ reset
     ^^                  _k_ lower           ^^
     ^^                  _l_ widen           ^^
     ^^                  ^^                  ^^
@@ -362,6 +362,8 @@ Winner mode allow you to undo window open/close configuration etc...
     ("l" enlarge-window-horizontally)
     ("-" text-scale-decrease)
     ("+" text-scale-increase)
+    ("u" winner-undo)
+    ("r" winner-redo)
     ("=" (text-scale-increase 0)))
 
 
@@ -528,6 +530,9 @@ like in sublime or something :)
 *** Ivy / Swipper / Counsel
 
 Add some magic but not helm so everything still works fast :)
+
+https://writequit.org/denver-emacs/presentations/2017-04-11-ivy.html
+
 *** Window movement
 
     TODO Ctrl-Tab ---> next window
