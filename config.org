@@ -59,6 +59,17 @@ and copy/move a file, will do directly with the other window. Because assumes th
 C-x n n: Narrow to region, means that temporary you only see the region on the current buffer
 C-x n w: Widen the region
 
+***** 
+
+***** Register - Windows 
+
+You can save your window-configurations:
+
+window-configuration-to-register C-x r w
+
+and restore it later:
+
+jump-to-register C-x r j
 
 
 ** config
@@ -104,6 +115,7 @@ Configure use-package to install next package
       `((".*" ,temporary-file-directory t)))
 
 #+END_SRC
+
 *** Dimish
 
 Diminish is used to no clutter the bottom bar with all the, one cool thing is that while
@@ -295,6 +307,22 @@ C-c m c (Menu for cursors) allow you to open this menu
 - a: (mark-all) will use the region as a search and add a cursor for each match
 - r: does the same but with an regex on the current region
 - C-Shift-c C-Shift-c: Add a cursor at the beginning of each line in the
+
+*** Winner mode
+
+Winner mode allow you to undo window open/close configuration etc...
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package winner
+  :diminish
+  :config
+  (winner-mode)
+  :bind
+  (("C-c w _" . winner-undo)
+   ("C-c w -" . winner-redo)))
+
+#+END_SRC
 
 *** Hydra menus
 
@@ -500,3 +528,6 @@ like in sublime or something :)
 *** Ivy / Swipper / Counsel
 
 Add some magic but not helm so everything still works fast :)
+*** Window movement
+
+    TODO Ctrl-Tab ---> next window
