@@ -9,6 +9,7 @@
  - https://wolfecub.github.io/dotfiles/
  - https://github.com/gilbertw1/emacs-literate-starter/blob/master/emacs.org
  - https://github.com/emacs-tw/awesome-emacs
+ - https://github.com/munen/emacs.d/ (from presentation https://www.youtube.com/watch?v=gfZDwYeBlO4)
  - https://matthewbauer.us/bauer/
 
 *** Emacs editor movement to remember
@@ -53,6 +54,11 @@ and copy/move a file, will do directly with the other window. Because assumes th
 
 #+END_SRC
 
+***** Narrow 
+
+C-x n n: Narrow to region, means that temporary you only see the region on the current buffer
+C-x n w: Widen the region
+
 
 
 ** config
@@ -85,6 +91,19 @@ Configure use-package to install next package
 (setq use-package-always-ensure t)
 #+END_SRC
 
+*** Not Temp files plz!
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(setq make-backup-files nil)
+
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
+#+END_SRC
 *** Dimish
 
 Diminish is used to no clutter the bottom bar with all the, one cool thing is that while
@@ -102,10 +121,11 @@ Configure basic UI, remove menu, scrollbar etc...
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (if (display-graphic-p)
-(progn
-    (menu-bar-mode -1)
-    (toggle-scroll-bar -1)
-    (tool-bar-mode -1)))
+    (progn
+      (menu-bar-mode -1)
+      (toggle-scroll-bar -1)
+      (tool-bar-mode -1)))
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 #+END_SRC
@@ -206,10 +226,10 @@ For example: when you press C-c, after a second it would show up what are the ne
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 (use-package which-key
-:diminish
-:config
-(setq which-key-idle-delay 0.2)
-(which-key-mode))
+  :diminish
+  :config
+  (setq which-key-idle-delay 0.2)
+  (which-key-mode))
 
 
 #+END_SRC
@@ -221,20 +241,20 @@ Undo tree allow you yo see how to undo/redo
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 (use-package undo-tree
-:diminish
-:bind (
-("C-z" . undo)
-("C-c _" . undo-tree-visualize)
-("C-S-z" . undo-tree-redo))
-:config
-(global-undo-tree-mode 1))
+  :diminish
+  :bind (
+  ("C-z" . undo)
+  ("C-c _" . undo-tree-visualize)
+  ("C-S-z" . undo-tree-redo))
+  :config
+  (global-undo-tree-mode 1))
 
 #+END_SRC
 
 *** GIT!
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package magit
-:bind (("C-c g" . magit-status)))
+  :bind (("C-c g" . magit-status)))
 #+END_SRC
 
 *** Expand Region
@@ -242,10 +262,10 @@ Undo tree allow you yo see how to undo/redo
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 (use-package expand-region
-:ensure
-:bind
-(("C-+" . er/expand-region)
-("C-M-+" . er/contract-region)))
+  :ensure
+  :bind
+  (("C-+" . er/expand-region)
+  ("C-M-+" . er/contract-region)))
 
 
 #+END_SRC
@@ -256,21 +276,13 @@ https://github.com/magnars/multiple-cursors.el
 Multiple cursors allow you to change multiple parts of the file that share some text
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
 (use-package multiple-cursors
-:bind (("<f2>" . mc/mark-previous-like-this)
-	("<f3>" . mc/mark-next-like-this)
-	("C-c <f2>" . mc/mark-all-like-this)
-	("<ESC> <ESC>" . mc/keyboard-quit))
-:ensure t)
-
-(use-package multiple-cursors
-:bind
-(("<C-S-down>" . mc/mark-next-like-this)
-("<C-S-up>" . mc/mark-previous-like-this)
-("C->" . mc/mark-next-like-this)
-("C-<" . mc/mark-previous-like-this)
-("C-S-c C-S-c" . mc/edit-lines)))
+  :bind
+  (("<C-S-down>" . mc/mark-next-like-this)
+  ("<C-S-up>" . mc/mark-previous-like-this)
+  ("C->" . mc/mark-next-like-this)
+  ("C-<" . mc/mark-previous-like-this)
+  ("C-S-c C-S-c" . mc/edit-lines)))
 
 #+END_SRC
 
@@ -291,9 +303,11 @@ C-c m c (Menu for cursors) allow you to open this menu
 
   (use-package hydra
     :defer 2
+    :config
+    (define-key dired-mode-map "." 'hydra-dired/body)
     :bind (("C-c m w" . hydra-windows/body)
            ("C-c m c" . multiple-cursors-hydra/body)
-           ("C-c m o" . hydra-org
+           ("C-c m o" . hydra-org)))
 
 #+END_SRC
 
@@ -313,7 +327,7 @@ C-c m c (Menu for cursors) allow you to open this menu
     ^^                  ^^                  ^^
     "
     ("q" nil)
-    ("B" balance-windows)
+    ("b" balance-windows)
     ("i" enlarge-window)
     ("j" shrink-window-horizontally)
     ("k" shrink-window)
@@ -394,7 +408,6 @@ T - tag prefix
   ("q" nil)
   ("." nil :color blue))
 
-(define-key dired-mode-map "." 'hydra-dired/body)
 
 #+END_SRC
 
@@ -475,6 +488,7 @@ C-e and C-f etc...
   (define-key evil-visual-state-map "\C-k" 'kill-line))
 
 #+END_SRC
+
 
 
 *** Eyebrowser / perspective
