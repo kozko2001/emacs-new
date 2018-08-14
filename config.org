@@ -440,6 +440,42 @@ I want evil just for movement but not for anything else...
 For the moment I install the package but not used by default but
 you need to start it by M-x evil-mode
 
+Also found this for better having some keybindings from emacs like
+C-e and C-f etc...
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package evil
+  :config
+  (define-key evil-normal-state-map "\C-e" 'evil-end-of-line)
+  (define-key evil-insert-state-map "\C-e" 'end-of-line)
+  (define-key evil-visual-state-map "\C-e" 'evil-end-of-line)
+  (define-key evil-motion-state-map "\C-e" 'evil-end-of-line)
+  (define-key evil-normal-state-map "\C-f" 'evil-forward-char)
+  (define-key evil-insert-state-map "\C-f" 'evil-forward-char)
+  (define-key evil-insert-state-map "\C-f" 'evil-forward-char)
+  (define-key evil-normal-state-map "\C-b" 'evil-backward-char)
+  (define-key evil-insert-state-map "\C-b" 'evil-backward-char)
+  (define-key evil-visual-state-map "\C-b" 'evil-backward-char)
+  (define-key evil-normal-state-map "\C-d" 'evil-delete-char)
+  (define-key evil-insert-state-map "\C-d" 'evil-delete-char)
+  (define-key evil-visual-state-map "\C-d" 'evil-delete-char)
+  (define-key evil-normal-state-map "\C-n" 'evil-next-line)
+  (define-key evil-insert-state-map "\C-n" 'evil-next-line)
+  (define-key evil-visual-state-map "\C-n" 'evil-next-line)
+  (define-key evil-normal-state-map "\C-p" 'evil-previous-line)
+  (define-key evil-insert-state-map "\C-p" 'evil-previous-line)
+  (define-key evil-visual-state-map "\C-p" 'evil-previous-line)
+  (define-key evil-normal-state-map "\C-w" 'evil-delete)
+  (define-key evil-insert-state-map "\C-w" 'evil-delete)
+  (define-key evil-visual-state-map "\C-w" 'evil-delete)
+  (define-key evil-normal-state-map "\C-y" 'yank)
+  (define-key evil-insert-state-map "\C-y" 'yank)
+  (define-key evil-visual-state-map "\C-y" 'yank)
+  (define-key evil-normal-state-map "\C-k" 'kill-line)
+  (define-key evil-insert-state-map "\C-k" 'kill-line)
+  (define-key evil-visual-state-map "\C-k" 'kill-line))
+
+#+END_SRC
+
 
 *** Eyebrowser / perspective
 
