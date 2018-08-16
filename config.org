@@ -59,9 +59,22 @@ and copy/move a file, will do directly with the other window. Because assumes th
 C-x n n: Narrow to region, means that temporary you only see the region on the current buffer
 C-x n w: Widen the region
 
-***** 
+***** Register
 
-***** Register - Windows 
+https://www.gnu.org/software/emacs/manual/html_node/emacs/Bookmarks.html
+
+Bookmarks are cursor positions stored, like in register but are persisted
+between emacs sessions
+
+C-x r: namespace of registers
+
+C-x r m: set bookmark
+
+C-x r b: Go to a bookmark
+
+C-x r l: Show list of bookmarks
+
+****** Windows
 
 You can save your window-configurations:
 
@@ -70,6 +83,13 @@ window-configuration-to-register C-x r w
 and restore it later:
 
 jump-to-register C-x r j
+
+***** Org babel
+
+1. <s <TAB> expands a code region :)
+
+2. Inside a code region you can press C-c ' and the code will open in another windw
+   with proper identation color etc...
 
 
 ** config
@@ -322,18 +342,6 @@ Winner mode allow you to undo window open/close configuration etc...
   (("C-c w _" . winner-undo)
    ("C-c w -" . winner-redo)))
 
-#+END_SRC
-
-*** Windows store to register
-
-You can store the windows configuration to a register
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-
-(global-set-key (kbd "C-c w q") (lambda () (window-configuration-to-register ?0))) 
-
-(window-configuration-to-register "r")
-(jump-to-register "r")
 #+END_SRC
 
 *** Hydra menus
