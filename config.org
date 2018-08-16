@@ -66,13 +66,23 @@ https://www.gnu.org/software/emacs/manual/html_node/emacs/Bookmarks.html
 Bookmarks are cursor positions stored, like in register but are persisted
 between emacs sessions
 
-C-x r: namespace of registers
+By default bookmarks are at C-x r, but for me it better to have them at C-c b
 
-C-x r m: set bookmark
+C-c b b: set bookmark
 
-C-x r b: Go to a bookmark
+C-c b j: Go to a bookmark
 
-C-x r l: Show list of bookmarks
+C-c b l: Show list of bookmarks
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (global-set-key (kbd "C-c b j") 'bookmark-jump)
+
+  (global-set-key (kbd "C-c b b") 'bookmark-set)
+
+  (global-set-key (kbd "C-c b l") 'bookmark-bmenu-list)
+
+#+END_SRC
 
 ****** Windows
 
@@ -183,6 +193,13 @@ More info: https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Emac
 
 #+END_SRC
 
+Also no use of tabs....
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(setq-default indent-tabs-mode nil)
+
+#+END_SRC
 *** IDO 
 
 IDO (Interactive DO) https://www.gnu.org/software/emacs/manual/html_mono/ido.html) 
@@ -312,6 +329,8 @@ Multiple cursors allow you to change multiple parts of the file that share some 
   :bind
   (("<C-S-down>" . mc/mark-next-like-this)
   ("<C-S-up>" . mc/mark-previous-like-this)
+  ("C-S-c c" . mc/mark-all-like-this-dwim)
+  ("C-S-c r" . mc/mark-previous-like-this)
   ("C->" . mc/mark-next-like-this)
   ("C-<" . mc/mark-previous-like-this)
   ("C-S-c C-S-c" . mc/edit-lines)))
@@ -348,8 +367,8 @@ Winner mode allow you to undo window open/close configuration etc...
 
     Copied from https://github.com/csand/emacs.d/blob/c6a2f45a62ddf498ac5f5d784d5f90ba155c35ea/init/init-eshell.el
 
-Visual commands is a way to say to eshell, for specific commands use ansi-term, and that's is necessary
-because if not, the tty is not attached and you can not use interactive command
+    Visual commands is a way to say to eshell, for specific commands use ansi-term, and that's is necessary
+    because if not, the tty is not attached and you can not use interactive command
 #+BEGIN_SRC emacs-lisp :tangle yes
 
 
@@ -369,8 +388,6 @@ because if not, the tty is not attached and you can not use interactive command
               (lambda ()
                 (add-to-list 'eshell-visual-commands "ssh")
                 (add-to-list 'eshell-visual-commands "tail")
-                (add-to-list 'eshell-visual-commands "npm")
-                (add-to-list 'eshell-visual-commands "jest")
                 (add-to-list 'eshell-visual-commands "docker")
                 (add-to-list 'eshell-visual-commands "top")))
 
@@ -529,13 +546,12 @@ T - tag prefix
 #+END_SRC
 
 ** EXPERIMENTAL!!!!
-
 *** Javascrip
 
 https://www.reddit.com/r/emacs/comments/6u1js5/vscode_really_outshines_emacs_when_it_comes/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package js2-mode
+  (use-package rjsx-mode
     :config
     ((lambda ()
        (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . rjsx-mode))
@@ -571,10 +587,39 @@ https://www.reddit.com/r/emacs/comments/6u1js5/vscode_really_outshines_emacs_whe
   ;;                  ;; Disable completion keybindings, as we use xref-js2 instead
   ;;                  (define-key tern-mode-keymap (kbd "M-.") nil)
 
+
+
+#+END_SRC
+
+
+For add eslint using the one in the project...
+copied from: https://github.com/eastwood/config/blob/master/emacs.d/emacs.org
+
+
+#+BEGIN_SRC emacs-lisp :tangle
+  (use-package flycheck
+    :init
+    (autoload 'pkg-info-version-info "pkg-info")
+    (setq-default flycheck-disabled-checker 'javascript-jshint)
+    (setq-default flycheck-disabled-checker 'json-jsonlist)
+    (setq-default flycheck-disabled-checker 'javascript-eslint)
+    (flycheck-add-mode 'javascript-eslint 'js2-mode)
+
+    (defun my/use-eslint-from-node-modules ()
+      (let* ((root (locate-dominating-file
+      (or (buffer-file-name) default-directory)
+        "node_modules"))
+        (eslint (and root
+        (expand-file-name "node_modules/eslint/bin/eslint.js"
+          root))))
+        (when (and eslint (file-executable-p eslint))
+      (setq-local flycheck-javascript-eslint-executable eslint))))
+    (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
+    (global-flycheck-mode))
+
 #+END_SRC
 
 ** TODO
-
 *** Evil ????? 
 
 I want evil just for movement but not for anything else...
@@ -623,8 +668,6 @@ C-e and C-f etc...
   (define-key evil-visual-state-map "\C-k" 'kill-line))
 
 #+END_SRC
-
-
 
 *** Eyebrowser / perspective
 
