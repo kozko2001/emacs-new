@@ -324,6 +324,18 @@ Winner mode allow you to undo window open/close configuration etc...
 
 #+END_SRC
 
+*** Windows store to register
+
+You can store the windows configuration to a register
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(global-set-key (kbd "C-c w q") (lambda () (window-configuration-to-register ?0))) 
+
+(window-configuration-to-register "r")
+(jump-to-register "r")
+#+END_SRC
+
 *** Hydra menus
 
 
@@ -339,7 +351,7 @@ Winner mode allow you to undo window open/close configuration etc...
 
 #+END_SRC
 
-**** Zoom  
+**** Windows
   #+BEGIN_SRC emacs-lisp :tangle yes
 
   (defhydra hydra-windows (:color pink)
@@ -467,6 +479,56 @@ T - tag prefix
 
 #+END_SRC
 
+** EXPERIMENTAL!!!!
+
+*** Javascrip
+
+https://www.reddit.com/r/emacs/comments/6u1js5/vscode_really_outshines_emacs_when_it_comes/
+
+#+BEGIN_SRC emacs-lisp
+
+(defun setup-tide-mode ()
+  "Set up Tide mode."
+  (interactive)
+  (tide-setup)
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1))
+
+(use-package tide
+  :ensure t
+  :config
+  (setq company-tooltip-align-annotations t)
+  ;; javascript configuration
+  (add-hook 'js-mode-hook #'setup-tide-mode)
+  (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
+  ;; jsx configuration with web mode
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (when (string-equal "jsx" (file-name-extension buffer-file-name))
+                (setup-tide-mode))))
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
+  ;; typescript support
+  (add-hook 'typescript-mode #'setup-tide-mode))
+
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package web-mode
+  :config
+  (defun my-web-mode-hook ()
+  "Hooks for Web mode. Adjust indents"
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-attr-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq css-indent-offset 2))
+  (add-to-list 'auto-mode-alist '("\\.cshtml\\'" . web-mode))
+  (add-hook 'web-mode-hook  'my-web-mode-hook))
+
+#+END_SRC
 
 ** TODO
 
