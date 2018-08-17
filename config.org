@@ -620,6 +620,15 @@ copied from: https://github.com/eastwood/config/blob/master/emacs.d/emacs.org
 #+END_SRC
 
 ** TODO
+
+*** Perspective ???
+
+https://github.com/bbatsov/persp-projectile
+
+*** XWIDGETS ???
+
+https://www.reddit.com/r/emacs/comments/97z7x8/do_you_use_emacs_for_everything/
+
 *** Evil ????? 
 
 I want evil just for movement but not for anything else...
