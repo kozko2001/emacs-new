@@ -173,26 +173,6 @@ Configure basic UI, remove menu, scrollbar etc...
 #+END_SRC
 
 
-Desktop save mode saves the session of the emacs between executions
-More info: https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Emacs-Sessions.html#Saving-Emacs-Sessions
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-
-(desktop-save-mode 1)
-
-
-(setq desktop-buffers-not-to-save
-    (concat "\\("
-	    "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
-	    "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
-    "\\)$"))
-(add-to-list 'desktop-modes-not-to-save 'dired-mode)
-(add-to-list 'desktop-modes-not-to-save 'Info-mode)
-(add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
-(add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
-
-#+END_SRC
-
 Also no use of tabs....
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -547,57 +527,152 @@ T - tag prefix
 
 ** EXPERIMENTAL!!!!
 *** Javascrip
+**** RJSX + xref-js2
+ I'm not using js2-refactor and tern-mode because seems that I don't need them
 
-I'm not using js2-refactor and tern-mode because seems that I don't need them
+ Interesting things:
 
-Interesting things:
+  - M-? => Find references in JS
+  - M-. => Go to Definition
+  - M-, => Return to the last point on definition
+  - C-! => Flycheck should be active with eslint in the current project
 
- - M-? => Find references in JS
- - M-. => Go to Definition
- - M-, => Return to the last point on definition
- - C-! => Flycheck should be active with eslint in the current project
+ #+BEGIN_SRC emacs-lisp :tangle yes
+   (defun use-eslint-from-node-modules ()
+     (let* ((root (locate-dominating-file
+                   (or (buffer-file-name) default-directory)
+                   "node_modules"))
+            (eslint (and root
+                         (expand-file-name "node_modules/eslint/bin/eslint.js"
+                                           root))))
+       (when (and eslint (file-executable-p eslint))
+         (setq-local flycheck-javascript-eslint-executable eslint))))
+
+   (defun onJavascriptMode ()
+     (message "on Javascript!")
+
+     ;;
+     (indium-interaction-mode 1)
+
+     ;; flycheck with eslint
+     (flycheck-mode 1)
+     (use-eslint-from-node-modules)
+     (flycheck-select-checker 'javascript-eslint)
+     (flycheck-disable-checker 'javascript-jshint)
+
+     ;; xref-js2
+     (define-key js-mode-map (kbd "M-.") nil) ; Disables M-. for normal js so we use the xref-find-definition
+     (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))
+
+   (use-package flycheck
+     :defer t)
+
+   (use-package rjsx-mode
+     :mode ("\\.jsx?\\'" . rjsx-mode)
+     :config
+     (message "RJSX on Config")
+     ;; JS2 config
+     (setq js2-idle-timer-delay 1)
+     (setq js-indent-level 2)
+     (setq js-switch-indent-offset 2)
+     (setq js2-bounce-indent-p t)
+     (setq js2-basic-offset 2)
+     (add-hook 'js2-mode-hook 'onJavascriptMode)
+     :init
+     (message "RJSX on init"))
+
+   (use-package xref-js2
+     :ensure)
+
+ #+END_SRC
+
+**** Indium (chrome/node) debugger
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (defun use-eslint-from-node-modules ()
-    (let* ((root (locate-dominating-file
-                  (or (buffer-file-name) default-directory)
-                  "node_modules"))
-           (eslint (and root
-                        (expand-file-name "node_modules/eslint/bin/eslint.js"
-                                          root))))
-      (when (and eslint (file-executable-p eslint))
-        (setq-local flycheck-javascript-eslint-executable eslint))))
 
-  (defun onJavascriptMode ()
-    (message "on Javascript!")
-
-    ;; flycheck with eslint
-    (flycheck-mode 1)
-    (use-eslint-from-node-modules)
-    (flycheck-select-checker 'javascript-eslint)
-    (flycheck-disable-checker 'javascript-jshint)
-
-    ;; xref-js2
-    (define-key js-mode-map (kbd "M-.") nil) ; Disables M-. for normal js so we use the xref-find-definition
-    (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)
-    (setq js2-basic-offset 2))
-
-  (use-package flycheck
-    :defer t)
-
-  (use-package rjsx-mode
-    :mode ("\\.jsx?\\'" . rjsx-mode)
+  (use-package indium
+    :commands (indium-interaction-mode)
     :config
-    (message "RJSX on Config")
-    (add-hook 'js2-mode-hook 'onJavascriptMode)
-    :init
-    (message "RJSX on init"))
-
-  (use-package xref-js2
-    :ensure)
+    (add-hook 'js-mode-hook #'indium-interaction-mode))
 
 #+END_SRC
 
+**** JEST (mocha modified)
+
+ Jest testing :) I found this gem on https://github.com/scottaj/mocha.el/issues/3
+
+ Actually is hack (an advice) added to already mode named mocha.el
+
+ TODO: Search how to use indium! and be able to debug!!!
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
+
+ (use-package mocha
+   :ensure t
+   :commands (mocha-test-project
+              mocha-debug-project
+              mocha-test-file
+              mocha-debug-file
+              mocha-test-at-point
+              mocha-debug-at-point)
+   :config
+   ;; Clear up stray ansi escape sequences.
+   (defvar jj*--mocha-ansi-escape-sequences
+     ;; https://emacs.stackexchange.com/questions/18457/stripping-stray-ansi-escape-sequences-from-eshell
+     (rx (or
+          "^[\\[[0-9]+[a-z]"
+          "�[1A"
+          "�[999D")))
+
+   (defun jj*--mocha-compilation-filter ()
+     "Filter function for compilation output."
+     (ansi-color-apply-on-region compilation-filter-start (point-max))
+     (save-excursion
+       (goto-char compilation-filter-start)
+       (while (re-search-forward jj*--mocha-ansi-escape-sequences nil t)
+         (replace-match ""))))
+
+   (advice-add 'mocha-compilation-filter :override 'jj*--mocha-compilation-filter)
+
+   ;; https://github.com/scottaj/mocha.el/issues/3
+   (defcustom mocha-jest-command "node_modules/jest/bin/jest.js --colors"
+     "The path to the jest command to run."
+     :type 'string
+     :group 'mocha)
+
+   (defun mocha-generate-command--jest-command (debug &optional filename testname)
+     "Generate a command to run the test suite with jest.
+ If DEBUG is true, then make this a debug command.
+ If FILENAME is specified run just that file otherwise run
+ MOCHA-PROJECT-TEST-DIRECTORY.
+ IF TESTNAME is specified run jest with a pattern for just that test."
+     (let ((target (if testname (concat " --testNamePattern \"" testname "\"") ""))
+           (path (if (or filename mocha-project-test-directory)
+                     (concat " --testPathPattern \""
+                             (if filename filename mocha-project-test-directory)
+                             "\"")
+                   ""))
+           (node-command
+            (concat mocha-which-node
+                    (if debug (concat " --debug=" mocha-debug-port) ""))))
+       (concat node-command " "
+               mocha-jest-command
+               target
+               path)))
+
+   (advice-add 'mocha-generate-command
+               :override 'mocha-generate-command--jest-command))
+
+ #+END_SRC
+
+ Found on reddit: ( https://www.reddit.com/r/emacs/comments/8e24t9/writing_reactjsx_in_2018_what_addons_do_you_all/ )
+ rjsx author here. I personally use rjsx + js2 for syntax highlighting and imenu,
+ tide for completion (with company), eldoc support, goto definition, find references,
+ and global renaming, flycheck for ESLint support, js2-refactor for local refactoring, 
+ js2-highlight-vars for highlighting variable at point, nvm.el for managing node versions,
+ and mocha.el for testing (hacked to support jest).
+
+ Are there other features of VS Code you're missing? Would love to hear about them!
 
 ** TODO
 
