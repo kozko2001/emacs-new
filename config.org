@@ -581,6 +581,40 @@ T - tag prefix
 
 #+END_SRC
 
+*** Twitter
+
+
+Twitter mode!
+
+Also, I saw this tos show images (https://github.com/hayamiz/twittering-mode/issues/136)
+
+But not working exactly as expected... so I will try to do it by myself!
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package twittering-mode
+    :ensure t
+    :commands twit
+    :bind
+    ("C-c a t" . twit)
+    :config
+    (setq twittering-use-master-password t
+        twittering-icon-mode t
+        twittering-use-icon-storage t
+        twittering-convert-fix-size 20
+        twittering-initial-timeline-spec-string '(":home")
+        twittering-edit-skeleton 'inherit-any
+        twittering-display-remaining t
+        twittering-fill-column 80
+        twittering-status-format "%i %FACE[font-lock-function-name-face]{@%s (%S)}  %FACE[italic]{%@}  %FACE[error]{%FIELD-IF-NONZERO[❤ %d]{favorite_count}}  %FACE[warning]{%FIELD-IF-NONZERO[↺ %d]{retweet_count}} %RT{RT by %s}
+%FOLD[ ]{%FILL{%t}
+%QT{
+%FOLD[   ]{%i %FACE[font-lock-function-name-face]{@%s}\t%FACE[shadow]{%@}
+%FOLD[   ]{%FILL{%t}}
+}}}"))
+#+END_SRC
+
+
+
 ** Languages
 *** Javascrip
 **** RJSX
