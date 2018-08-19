@@ -186,7 +186,8 @@ Also no use of tabs....
 (setq-default indent-tabs-mode nil)
 
 #+END_SRC
-*** IDO 
+
+*** COMMENT IDO 
 
 IDO (Interactive DO) https://www.gnu.org/software/emacs/manual/html_mono/ido.html) 
 
@@ -201,6 +202,31 @@ on the mini-buffer of emacs such as find-file or switch-buffer
 (ido-everywhere 1)
 #+END_SRC
 
+*** Ivy + Counsel
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+    ;; ivy
+    (use-package ivy
+      :ensure t
+      :diminish
+      :config
+      (ivy-mode 1)
+      (bind-key "C-c C-r" 'ivy-resume))
+
+    ;; counsel
+    (use-package counsel
+      :ensure t
+      :bind
+      ("M-x" . counsel-M-x)
+      ("C-h f" . counsel-describe-function)
+      ("C-h v" . counsel-describe-variable))
+
+
+    (use-package smex
+      :init (smex-initialize))
+#+END_SRC
+
 *** Projectile
 
 Projectile (https://github.com/bbatsov/projectile) 
@@ -213,6 +239,7 @@ Allow you to do find-file and search inside your project only
     :bind-keymap
     ("C-c p" . projectile-command-map)
     :config
+    (setq projectile-completion-system 'ivy)
     (projectile-register-project-type 'npm '("package.json")
                                          :compile "npm install"
                                          :test "npm test"
@@ -221,7 +248,6 @@ Allow you to do find-file and search inside your project only
                                          :test-suffix ".test"))
 
 #+END_SRC
-
 
 *** OSX
 
@@ -321,9 +347,7 @@ Multiple cursors allow you to change multiple parts of the file that share some 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package multiple-cursors
   :bind
-  (("<C-S-down>" . mc/mark-next-like-this)
-  ("<C-S-up>" . mc/mark-previous-like-this)
-  ("C-S-c c" . mc/mark-all-like-this-dwim)
+  (("C-S-c c" . mc/mark-all-like-this-dwim)
   ("C-S-c r" . mc/mark-previous-like-this)
   ("C->" . mc/mark-next-like-this)
   ("C-<" . mc/mark-previous-like-this)
@@ -401,7 +425,7 @@ Winner mode allow you to undo window open/close configuration etc...
 
   (show-paren-mode 1)
 
-  (setq show-paren-style 'parenthesis)
+  (setq show-paren-style 'expression)
 
 #+END_SRC
 
@@ -784,12 +808,6 @@ C-e and C-f etc...
 I would love yo have a way to organize my code programming like a shell at the bottom and a 
 tree (dired) and a couple of buffers and be able to switch between them fast and easy just 
 like in sublime or something :)
-
-*** Ivy / Swipper / Counsel
-
-Add some magic but not helm so everything still works fast :)
-
-https://writequit.org/denver-emacs/presentations/2017-04-11-ivy.html
 
 *** Window movement
 
