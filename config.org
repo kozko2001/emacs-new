@@ -2,6 +2,7 @@
 
 * emacs config
 
+
 ** Learning
 *** Examples of emacs config
 
@@ -108,6 +109,7 @@ jump-to-register C-x r j
  - C-M h            => Mark until begining of next defun
  - C-M a / e        => Begining/End of defun
 
+
 ** config
 *** Set GC
 
@@ -189,6 +191,8 @@ Also no use of tabs....
 
 *** COMMENT IDO 
 
+Commented because I'm using Ivy now :)
+
 IDO (Interactive DO) https://www.gnu.org/software/emacs/manual/html_mono/ido.html) 
 
 is already built in into the Emacs system... it helps you when there are multiple options 
@@ -206,25 +210,29 @@ on the mini-buffer of emacs such as find-file or switch-buffer
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-    ;; ivy
-    (use-package ivy
-      :ensure t
-      :diminish
-      :config
-      (ivy-mode 1)
-      (bind-key "C-c C-r" 'ivy-resume))
+  ;; ivy
+  (use-package ivy
+    :ensure t
+    :diminish
+    :config
+    (ivy-mode 1)
 
-    ;; counsel
-    (use-package counsel
-      :ensure t
-      :bind
-      ("M-x" . counsel-M-x)
-      ("C-h f" . counsel-describe-function)
-      ("C-h v" . counsel-describe-variable))
+    (setq ivy-re-builders-alist
+          '((swiper . ivy--regex-plus)
+            (t      . ivy--regex-fuzzy)))
+    (bind-key "C-c C-r" 'ivy-resume))
+
+  ;; counsel
+  (use-package counsel
+    :ensure t
+    :bind
+    ("M-x" . counsel-M-x)
+    ("C-h f" . counsel-describe-function)
+    ("C-h v" . counsel-describe-variable))
 
 
-    (use-package smex
-      :init (smex-initialize))
+  (use-package smex
+    :init (smex-initialize))
 #+END_SRC
 
 *** Projectile
@@ -573,7 +581,7 @@ T - tag prefix
 
 #+END_SRC
 
-** EXPERIMENTAL!!!!
+** Languages
 *** Javascrip
 **** RJSX
  I'm not using js2-refactor and tern-mode because seems that I don't need them, using tide
@@ -725,6 +733,8 @@ T - tag prefix
  Are there other features of VS Code you're missing? Would love to hear about them!
 
 **** Tide
+
+Tide allow you to use vscode backend for goto definition, reorganize imports, find ref etc...
 
 https://github.com/ananthakumaran/tide/issues/211
 
