@@ -718,10 +718,6 @@ https://github.com/ananthakumaran/tide/issues/211
 
 https://github.com/bbatsov/persp-projectile
 
-*** XWIDGETS ???
-
-https://www.reddit.com/r/emacs/comments/97z7x8/do_you_use_emacs_for_everything/
-
 *** Evil ????? 
 
 I want evil just for movement but not for anything else...
@@ -786,3 +782,15 @@ https://writequit.org/denver-emacs/presentations/2017-04-11-ivy.html
 *** Window movement
 
     TODO Ctrl-Tab ---> next window
+
+*** Treemacs
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+
+(use-package treemacs
+  :ensure t
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)))
+
+#+END_SRC
