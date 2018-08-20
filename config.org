@@ -12,6 +12,7 @@
  - https://github.com/emacs-tw/awesome-emacs
  - https://github.com/munen/emacs.d/ (from presentation https://www.youtube.com/watch?v=gfZDwYeBlO4)
  - https://matthewbauer.us/bauer/
+ - https://github.com/angrybacon/dotemacs
 
 *** Emacs editor movement to remember
 
@@ -185,7 +186,16 @@ Also no use of tabs....
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-(setq-default indent-tabs-mode nil)
+  (setq-default indent-tabs-mode nil)
+
+  (setq
+   mouse-yank-at-point t
+   scroll-margin 4                                 ; Add a margin when scrolling vertically
+   sentence-end-double-space nil                    ; End a sentence after a dot and a space
+   show-trailing-whitespace t
+   help-window-select t                             ; Focus new help windows when opened
+   )
+
 
 #+END_SRC
 
