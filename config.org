@@ -20,7 +20,7 @@
     - M-a, M-e: Begining/end of a sentence
     - M-d     : Kill word (forward until next change of word
     - M-- M-d : Kill word (but backwards because the M-- means modifier -1)
-    - 
+    -
 
 **** Interesting Keybinding
     - M-;: Comment
@@ -33,7 +33,7 @@
     - C-x C-e: Execute sexp after the cursor
     - . on dired mode: Shows dired hydra help menu
 
-**** Help - Describe 
+**** Help - Describe
     - C-h f: Describe function
     - C-h m: Describe mode
     - C-h k: Describe key
@@ -55,7 +55,7 @@ and copy/move a file, will do directly with the other window. Because assumes th
 
 #+END_SRC
 
-***** Narrow 
+***** Narrow
 
 C-x n n: Narrow to region, means that temporary you only see the region on the current buffer
 C-x n w: Widen the region
@@ -189,7 +189,6 @@ Also no use of tabs....
 
 #+END_SRC
 
-
 End/Home keys to begining and end of the line :)
 
 #+BEGIN_SRC emacs-lisp
@@ -199,13 +198,14 @@ End/Home keys to begining and end of the line :)
 
 #+END_SRC
 
-*** COMMENT IDO 
+*** COMMENT IDO
+>>>>>>> 8764e49f38b0ab4868f3e1c57dec5733e92f8c5b
 
 Commented because I'm using Ivy now :)
 
-IDO (Interactive DO) https://www.gnu.org/software/emacs/manual/html_mono/ido.html) 
+IDO (Interactive DO) https://www.gnu.org/software/emacs/manual/html_mono/ido.html)
 
-is already built in into the Emacs system... it helps you when there are multiple options 
+is already built in into the Emacs system... it helps you when there are multiple options
 on the mini-buffer of emacs such as find-file or switch-buffer
 
 
@@ -247,7 +247,7 @@ on the mini-buffer of emacs such as find-file or switch-buffer
 
 *** Projectile
 
-Projectile (https://github.com/bbatsov/projectile) 
+Projectile (https://github.com/bbatsov/projectile)
 
 Allow you to do find-file and search inside your project only
 
@@ -601,7 +601,7 @@ Also, I saw this tos show images (https://github.com/hayamiz/twittering-mode/iss
 But not working exactly as expected... so I will try to do it by myself!
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (defun swizzle-twitter-to-load-images () 
+  (defun swizzle-twitter-to-load-images ()
     (defun *twittering-generate-format-table (status-sym prefix-sym)
       `(("%" . "%")
         ("}" . "}")
@@ -749,7 +749,35 @@ Twitter images :)
 #+RESULTS:
 : xxx
 
+*** Strip white spaces after save
 
+#+BEGIN_SRC emacs-lisp
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+#+END_SRC
+
+*** Workspaces2
+
+ - C-c w c: create a new workspace
+ - C-c w v: go to workspace
+
+
+#+BEGIN_SRC emacs-lisp
+
+(use-package workgroups2
+  :ensure t
+  :diminish workgroups-mode
+  :init
+  (setq wg-prefix-key (kbd "C-c w")
+        wg-session-file "~/.emacs.d/workgroups2"
+        wg-mode-line-display-on nil
+        ;; What to do on Emacs exit / workgroups-mode exit?
+        wg-emacs-exit-save-behavior           'save      ; Options: 'save 'ask nil
+        wg-workgroups-mode-exit-save-behavior 'save)
+  (workgroups-mode 1))
+
+#+END_SRC
 ** Languages
 *** Javascrip
 **** RJSX
@@ -895,7 +923,7 @@ Twitter images :)
  Found on reddit: ( https://www.reddit.com/r/emacs/comments/8e24t9/writing_reactjsx_in_2018_what_addons_do_you_all/ )
  rjsx author here. I personally use rjsx + js2 for syntax highlighting and imenu,
  tide for completion (with company), eldoc support, goto definition, find references,
- and global renaming, flycheck for ESLint support, js2-refactor for local refactoring, 
+ and global renaming, flycheck for ESLint support, js2-refactor for local refactoring,
  js2-highlight-vars for highlighting variable at point, nvm.el for managing node versions,
  and mocha.el for testing (hacked to support jest).
 
@@ -925,6 +953,27 @@ https://github.com/ananthakumaran/tide/issues/211
     (setup-tide-mode))
 #+END_SRC
 
+**** eslint fix
+
+Fix eslint after save :)
+#+BEGIN_SRC emacs-lisp
+
+
+  (defun eslint-fix-file ()
+    (interactive)
+    (message "eslint --fixing the file" (buffer-file-name))
+    (shell-command (concat flycheck-javascript-eslint-executable " --fix " (buffer-file-name))))
+
+  (defun eslint-fix-file-and-revert ()
+    (interactive)
+    (eslint-fix-file)
+    (revert-buffer t t))
+
+  (add-hook 'js2-mode-hook
+            (lambda ()
+  (add-hook 'after-save-hook #'eslint-fix-file-and-revert)))
+
+#+END_SRC
 
 
 ** TODO
@@ -933,7 +982,7 @@ https://github.com/ananthakumaran/tide/issues/211
 
 https://github.com/bbatsov/persp-projectile
 
-*** Evil ????? 
+*** Evil ?????
 
 I want evil just for movement but not for anything else...
 
@@ -984,8 +1033,8 @@ C-e and C-f etc...
 
 *** Eyebrowser / perspective
 
-I would love yo have a way to organize my code programming like a shell at the bottom and a 
-tree (dired) and a couple of buffers and be able to switch between them fast and easy just 
+I would love yo have a way to organize my code programming like a shell at the bottom and a
+tree (dired) and a couple of buffers and be able to switch between them fast and easy just
 like in sublime or something :)
 
 *** Window movement
