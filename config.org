@@ -189,6 +189,16 @@ Also no use of tabs....
 
 #+END_SRC
 
+
+End/Home keys to begining and end of the line :)
+
+#+BEGIN_SRC emacs-lisp
+
+(global-set-key (kbd "<home>") 'beginning-of-line)
+(global-set-key (kbd "<end>") 'end-of-line)
+
+#+END_SRC
+
 *** COMMENT IDO 
 
 Commented because I'm using Ivy now :)
