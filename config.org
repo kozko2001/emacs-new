@@ -347,6 +347,32 @@ from: http://ergoemacs.org/emacs/emacs_x11_sync_clipboard.html
 
 #+END_SRC
 
+*** C-TAB and C-S-Tab go to next window
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (require 'bind-key)
+    (bind-key "<C-tab>" 'other-window)
+    (bind-key "<C-s-tab>" (lambda ()
+    (interactive)
+      (other-window -1)))
+
+  (with-eval-after-load 'magit-mode
+    (define-key magit-mode-map (kbd "<C-tab>") nil))
+
+  (defun kzk/org-unbind-tab ()
+    (message "unbinding tab on org mode")
+    (define-key org-mode-map (kbd "<C-tab>") nil))
+
+  (when (boundp 'org-mode-map)
+    (kzk/org-unbind-tab))
+
+  (with-eval-after-load 'org-mode 'kzk/org-unbind-tab)
+
+
+
+#+END_SRC
+
+
 *** Which Key
 
 Which key is a minor mode that allow you to see which keystrokes are available after a prefix
@@ -1044,7 +1070,7 @@ Fix eslint after save :)
 
   (add-hook 'js2-mode-hook
             (lambda ()
-  (add-hook 'after-save-hook #'eslint-fix-file-and-revert)))
+  (add-hook 'after-save-hook #'eslint-fix-file-and-revert nil t)))
 
 #+END_SRC
 
@@ -1073,11 +1099,23 @@ Fix eslint after save :)
 
 #+END_SRC
 
+
+*** Python
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (defun onPython ()
+    (message "onPython")
+    (lsp-python-enable)
+    (flycheck-mode 1))
+
+  (use-package lsp-python)
+  (require 'lsp-python)
+  (add-hook 'python-mode-hook #'onPython)
+
+#+END_SRC
+
 ** TODO
-
-*** Perspective ???
-
-https://github.com/bbatsov/persp-projectile
 
 *** Evil ?????
 
