@@ -13,6 +13,9 @@
  - https://github.com/munen/emacs.d/ (from presentation https://www.youtube.com/watch?v=gfZDwYeBlO4)
  - https://matthewbauer.us/bauer/
  - https://github.com/angrybacon/dotemacs
+ - https://github.com/akirak/emacs.d (Very good with a lot of things, but not many languages)
+ - https://github.com/dholm/dotemacs (With a lot of layers and a lot of interesting things)
+
 
 *** Emacs editor movement to remember
 
@@ -112,6 +115,8 @@ jump-to-register C-x r j
 
 
 ** config
+
+
 *** Set GC
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -120,7 +125,7 @@ jump-to-register C-x r j
 
 #+END_SRC!
 
-*** use-package
+*** COMMENT use-package
 Configure use-package to install next package
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -140,6 +145,31 @@ Configure use-package to install next package
 ;; install package if not already in
 (setq use-package-always-ensure t)
 #+END_SRC
+
+*** Straight
+
+Allow to install from github
+#+BEGIN_SRC emacs-lisp
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+
+(setq straight-use-package-by-default t)
+
+#+END_SRC
+
 
 *** Not Temp files plz!
 
@@ -199,7 +229,17 @@ Also no use of tabs....
 
 #+END_SRC
 
+End/Home keys to begining and end of the line :)
+
+#+BEGIN_SRC emacs-lisp
+
+(global-set-key (kbd "<home>") 'beginning-of-line)
+(global-set-key (kbd "<end>") 'end-of-line)
+
+#+END_SRC
+
 *** COMMENT IDO
+>>>>>>> 8764e49f38b0ab4868f3e1c57dec5733e92f8c5b
 
 Commented because I'm using Ivy now :)
 
@@ -778,6 +818,32 @@ Twitter images :)
   (workgroups-mode 1))
 
 #+END_SRC
+
+*** LSP (Language server protocol)
+
+From: https://github.com/akirak/emacs.d/blob/master/coding/init-lsp.el
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode)
+
+(use-package company-lsp
+  :after (lsp-mode company)
+  :init
+  (add-hook 'company-backends 'company-lsp))
+
+(use-package lsp-ui
+  :after lsp
+  :config
+  (company-mode 1)
+  (add-hook 'lsp-ui-doc-mode-hook
+            (lambda () (when lsp-ui-doc-mode (eldoc-mode -1))))
+  (add-hook 'lsp-ui-mode-hook 'lsp-ui-doc-enable)
+  :hook
+  (lsp-after-open . (lambda () (lsp-ui-mode 1))))
+
+#+END_SRC
+
+
 ** Languages
 *** Javascrip
 **** RJSX
@@ -979,6 +1045,29 @@ Fix eslint after save :)
 
 #+END_SRC
 
+*** Docker
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package docker
+  :ensure t
+  :bind ("C-c d" . docker))
+
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+
+  (use-package dockerfile-mode
+    :init
+    (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
+
+(straight-use-package
+ '(lsp-dockerfile :type git :host github :repo "emacs-lsp/lsp-dockerfile"))
+
+(add-hook 'dockerfile-mode-hook #'lsp-dockerfile-enable)
+
+#+END_SRC
 
 ** TODO
 
