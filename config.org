@@ -805,6 +805,10 @@ Twitter images :)
    (defun onJavascriptMode ()
      (message "on Javascript!")
 
+     ;; Fucking better indentation
+     (local-set-key (kbd "TAB") 'js2-indent-bounce)
+     (local-set-key (kbd "<backtab>") 'js2-indent-bounce-backward)
+
      ;;
      (indium-interaction-mode 1)
 
