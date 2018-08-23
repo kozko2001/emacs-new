@@ -151,6 +151,9 @@ Configure use-package to install next package
 Allow to install from github
 #+BEGIN_SRC emacs-lisp
 
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -1051,6 +1054,7 @@ Fix eslint after save :)
 
 (use-package docker
   :ensure t
+  :straight t
   :bind ("C-c d" . docker))
 
 #+END_SRC
@@ -1064,7 +1068,7 @@ Fix eslint after save :)
 
 (straight-use-package
  '(lsp-dockerfile :type git :host github :repo "emacs-lsp/lsp-dockerfile"))
-
+(require 'lsp-dockerfile)
 (add-hook 'dockerfile-mode-hook #'lsp-dockerfile-enable)
 
 #+END_SRC
