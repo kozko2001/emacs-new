@@ -173,7 +173,6 @@ Allow to install from github
 
 #+END_SRC
 
-
 *** Not Temp files plz!
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -356,10 +355,12 @@ from: http://ergoemacs.org/emacs/emacs_x11_sync_clipboard.html
 
 *** C-TAB and C-S-Tab go to next window
 
+C-Tab goes to other-window
+
 #+BEGIN_SRC emacs-lisp :tangle yes
     (require 'bind-key)
     (bind-key "<C-tab>" 'other-window)
-    (bind-key "<C-s-tab>" (lambda ()
+    (bind-key "<C-iso-lefttab>" (lambda ()
     (interactive)
       (other-window -1)))
 
@@ -812,9 +813,6 @@ But not working exactly as expected... so I will try to do it by myself!
 "))
 #+END_SRC
 
-#+RESULTS:
-: twit
-
 Twitter images :)
 
 #+BEGIN_SRC emacs-lisp :tangle
@@ -822,8 +820,6 @@ Twitter images :)
 
 #+END_SRC
 
-#+RESULTS:
-: xxx
 
 *** Strip white spaces after save
 
@@ -879,6 +875,24 @@ From: https://github.com/akirak/emacs.d/blob/master/coding/init-lsp.el
 
 #+END_SRC
 
+*** Interaction Log (Show keybindings!)\
+
+Show what are you doing on your emacs :)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (defun toggle-interaction-log ()
+    (interactive)
+    (interaction-log-mode)
+    (pop-to-buffer "*Emacs Log*"))
+
+  (use-package interaction-log
+    :defer
+    :bind
+    ("C-h l" . toggle-interaction-log))
+
+
+#+END_SRC
 
 ** Languages
 *** Javascrip
@@ -1106,7 +1120,6 @@ Fix eslint after save :)
 
 #+END_SRC
 
-
 *** Python
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1172,16 +1185,6 @@ C-e and C-f etc...
   (define-key evil-visual-state-map "\C-k" 'kill-line))
 
 #+END_SRC
-
-*** Eyebrowser / perspective
-
-I would love yo have a way to organize my code programming like a shell at the bottom and a
-tree (dired) and a couple of buffers and be able to switch between them fast and easy just
-like in sublime or something :)
-
-*** Window movement
-
-    TODO Ctrl-Tab ---> next window
 
 *** Treemacs
 #+BEGIN_SRC emacs-lisp :tangle yes
