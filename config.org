@@ -241,6 +241,13 @@ End/Home keys to begining and end of the line :)
 
 #+END_SRC
 
+
+And highlight current line :)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-hl-line-mode +1)
+#+END_SRC
+
 *** COMMENT IDO
 >>>>>>> 8764e49f38b0ab4868f3e1c57dec5733e92f8c5b
 
