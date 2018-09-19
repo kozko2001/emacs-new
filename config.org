@@ -514,6 +514,16 @@ Winner mode allow you to undo window open/close configuration etc...
 
 #+END_SRC
 
+*** Atomic Chrome (edit with emacs on chrome text)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package atomic-chrome
+    :config
+    (atomic-chrome-start-server)
+    (setq atomic-chrome-buffer-open-style 'frame))
+#+END_SRC
+
 *** Smart parens
 
 #+BEGIN_SRC emacs-lisp :tangle yes
