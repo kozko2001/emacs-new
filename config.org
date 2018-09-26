@@ -14,6 +14,7 @@
  - https://github.com/angrybacon/dotemacs
  - https://github.com/akirak/emacs.d (Very good with a lot of things, but not many languages)
  - https://github.com/dholm/dotemacs (With a lot of layers and a lot of interesting things)
+ - https://github.com/caisah/emacs.dz (List of nice emacs config files)
 
 *** Emacs editor movement to remember
 
@@ -507,6 +508,16 @@ Winner mode allow you to undo window open/close configuration etc...
             (eshell/alias "emacs" "find-file $1")
             (eshell/alias "ee" "find-file-other-window $1")))
 
+#+END_SRC
+
+*** Atomic Chrome (edit with emacs on chrome text)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package atomic-chrome
+    :config
+    (atomic-chrome-start-server)
+    (setq atomic-chrome-buffer-open-style 'frame))
 #+END_SRC
 
 *** Smart parens
