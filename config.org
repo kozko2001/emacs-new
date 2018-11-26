@@ -310,6 +310,7 @@ Allow you to do find-file and search inside your project only
                                          :test-dir "tests"
                                          :test-suffix ".test"))
 
+(setq projectile-completion-system 'ivy)
 #+END_SRC
 
 *** OSX
@@ -924,6 +925,7 @@ Prefix: C-c o
 
 #+END_SRC
 
+
 ** Languages
 *** Javascrip
 **** RJSX
@@ -1154,14 +1156,17 @@ Fix eslint after save :)
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-  (defun onPython ()
-    (message "onPython")
-    (lsp-python-enable)
-    (flycheck-mode 1))
+  (use-package anaconda-mode
+  :config
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
 
-  (use-package lsp-python)
-  (require 'lsp-python)
-  (add-hook 'python-mode-hook #'onPython)
+(use-package pipenv
+  :hook (python-mode . pipenv-mode)
+  :init
+  (setq
+   pipenv-projectile-after-switch-function
+   #'pipenv-projectile-after-switch-extended))
 
 #+END_SRC
 
