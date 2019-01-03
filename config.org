@@ -925,6 +925,13 @@ Prefix: C-c o
 
 #+END_SRC
 
+*** Yaml
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package yaml-mode)
+
+#+END_SRC
 
 ** Languages
 *** Javascrip
