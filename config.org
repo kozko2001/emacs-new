@@ -1170,6 +1170,46 @@ Fix eslint after save :)
 
 #+END_SRC
 
+*** Scala
+
+CheatSheet: http://ensime.github.io/editors/emacs/cheat_sheet/
+
+**** Install SBT-ensime plugin (globally)
+ sbt-ensime is an editor integration plugin and isn’t a strict requirement of the build.
+
+ Therefore it is recommended to install it as a global plugin so that it’s always available.
+
+ To do so, add it to ~/.sbt/1.0/plugins/plugins.sbt (create if necessary) as such:
+ To do so, add it to ~/.sbt/0.13/plugins/plugins.sbt (create if necessary) as such:
+
+ addSbtPlugin("org.ensime" % "sbt-ensime" % "2.5.1")
+
+**** Create .ensime files
+#+BEGIN_SRC shell
+     sbt ensimeConfig
+#+END_SRC
+
+
+**** Emacs config :)
+ensime prefix: C-c C-v
+sbt prefix: C-c C-b
+before to use: M-x ensime to connect to the server :)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package ensime
+    :ensure t
+    :pin melpa
+    :config
+    (add-to-list 'exec-path "/usr/local/bin")
+    )
+
+  (use-package sbt-mode
+    :pin melpa)
+
+  (use-package scala-mode
+    :pin melpa)
+#+END_SRC
 
 ** TODO
 
