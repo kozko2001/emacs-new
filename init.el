@@ -15,7 +15,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (flycheck rjsx-mode rxjs rxjs-mode evil xref-js2 js2-refactor js2-mode hydra multiple-cursors expand-region magit undo-tree which-key leuven-theme projectile diminish use-package))))
+    (workgroups2 persp-tab-mode persp-mode twittering-mode twittering auto-dim-other-buffers smex counsel ivy treemacs-projectile treemacs tide indium realgud mocha gruvbox-theme flycheck rjsx-mode rxjs rxjs-mode evil xref-js2 js2-refactor js2-mode hydra multiple-cursors expand-region magit undo-tree which-key leuven-theme projectile diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
