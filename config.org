@@ -1178,6 +1178,20 @@ Fix eslint after save :)
 #+END_SRC
 
 
+*** Scala
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package ensime
+  :ensure t)
+
+(use-package scala-mode
+  :interpreter
+  ("scala" . scala-mode))
+
+
+
+#+END_SRC
 ** TODO
 
 *** Evil ?????
